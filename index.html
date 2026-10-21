@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>تدريب اقتصاديات السياحة والفنادق</title>
+<style>
+:root{--bg:#f3f6f4;--card:#fff;--ink:#14302b;--mut:#5c7570;--line:#cfdcd7;--acc:#0f6b5c;--accink:#fff;--ok:#1b8a4b;--okbg:#dff3e7;--no:#c0392b;--nobg:#fbe3df;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1a18;--card:#172522;--ink:#e6f1ee;--mut:#93aca6;--line:#2c4540;--acc:#4fc3ad;--accink:#06201b;--ok:#5fd48d;--okbg:#14382a;--no:#ff8a7a;--nobg:#3d1f1b}}
+:root[data-theme="dark"]{--bg:#0f1a18;--card:#172522;--ink:#e6f1ee;--mut:#93aca6;--line:#2c4540;--acc:#4fc3ad;--accink:#06201b;--ok:#5fd48d;--okbg:#14382a;--no:#ff8a7a;--nobg:#3d1f1b}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Segoe UI","Noto Naskh Arabic",Tahoma,Arial,sans-serif;font-size:17px;line-height:1.7}
+main{max-width:640px;margin:0 auto;padding:18px 16px 40px}
+h1{font-size:24px;margin:8px 0 4px}
+p.sub{color:var(--mut);margin:0 0 18px}
+.modes{display:grid;gap:10px}
+button{font:inherit;cursor:pointer;color:var(--ink)}
+.mode{background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:14px 16px;text-align:right;display:flex;justify-content:space-between;align-items:center}
+.mode small{color:var(--mut)}
+.mode:hover,.mode:focus-visible{border-color:var(--acc);outline:none}
+.bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin:6px 0 14px}
+.bar i{display:block;height:100%;background:var(--acc);width:0;transition:width .25s}
+.top{display:flex;justify-content:space-between;color:var(--mut);font-size:15px}
+.q{font-size:20px;font-weight:600;margin:10px 0 16px;line-height:1.8}
+.tag{display:inline-block;font-size:13px;color:var(--acc);border:1px solid var(--acc);border-radius:20px;padding:0 10px}
+.opt{display:block;width:100%;text-align:right;background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;margin:0 0 9px}
+.opt:hover:not(:disabled){border-color:var(--acc)}
+.opt:focus-visible,.go:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.opt.ok{background:var(--okbg);border-color:var(--ok);color:var(--ok);font-weight:600}
+.opt.no{background:var(--nobg);border-color:var(--no);color:var(--no)}
+.opt:disabled{cursor:default}
+.go{background:var(--acc);color:var(--accink);border:0;border-radius:12px;padding:12px 22px;font-weight:600;margin-top:8px}
+.go.alt{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.big{font-size:56px;font-weight:700;color:var(--acc);margin:6px 0;line-height:1.2}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.ltr{direction:ltr;unicode-bidi:isolate;display:inline-block}
+.fld{display:block;margin:0 0 12px}
+.fld span{display:block;color:var(--mut);font-size:15px}
+.fld input{width:100%;font:inherit;font-size:20px;color:var(--ink);background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:10px 14px;text-align:left}
+.fld input:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.fld input.ok{border-color:var(--ok);background:var(--okbg);color:var(--ok)}
+.fld input.no{border-color:var(--no);background:var(--nobg);color:var(--no)}
+.fix{display:block;color:var(--ok);font-weight:600}
+.hint{color:var(--mut);font-size:14px;margin:0 0 6px}
+.tw{overflow-x:auto;margin:0 0 8px}
+.tw table{border-collapse:collapse;width:100%;text-align:center}
+.tw th,.tw td{border:1px solid var(--line);padding:6px 5px}
+.tw th{background:var(--card);font-size:14px}
+.tw input{width:4.6em;font:inherit;font-size:17px;color:var(--ink);background:var(--bg);border:1.5px solid var(--acc);border-radius:8px;padding:4px 6px;text-align:center}
+.tw input:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.tw input.ok{border-color:var(--ok);background:var(--okbg);color:var(--ok)}
+.tw input.no{border-color:var(--no);background:var(--nobg);color:var(--no)}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<main>
+<section id="home">
+  <h1>تدريب اقتصاديات السياحة والفنادق</h1>
+  <p class="sub">اضغط على الإجابة وتعرف الصح من الغلط مباشرة. بدون شرح، سريع وخفيف.</p>
+  <div class="modes" id="modes"></div>
+</section>
+<section id="quiz" hidden>
+  <div class="top"><span id="cnt"></span><span id="sc"></span></div>
+  <div class="bar"><i id="pb"></i></div>
+  <span class="tag" id="tag"></span>
+  <div class="q" id="q"></div>
+  <div id="opts"></div>
+  <button class="go" id="next" hidden>التالي</button>
+</section>
+<section id="end" hidden>
+  <h1>النتيجة</h1>
+  <div class="big" id="res"></div>
+  <p class="sub" id="msg"></p>
+  <div class="sub" id="brk"></div>
+  <div class="row">
+    <button class="go" id="again">إعادة نفس الاختبار</button>
+    <button class="go alt" id="wrongBtn">أسئلتي الغلط فقط</button>
+    <button class="go alt" id="home2">القائمة</button>
+  </div>
+</section>
+</main>
+<script>
+var T="نظري",TF="صح / خطأ",M="مسائل",WS="مسألة: اكتب الجواب",TB="جدول ناقص";
+// [القسم، السؤال، الإجابة الصحيحة، ...الخيارات الخاطئة]
+var D=[
+[TF,"يُعد قطاع السياحة قطاعًا خدميًا.","صح","خطأ"],
+[TF,"المنتج السياحي قابل للتخزين.","خطأ","صح"],
+[TF,"عناصر الإنتاج الأربعة هي: العمل، رأس المال، الأرض، المنظم.","صح","خطأ"],
+[TF,"عائد رأس المال يسمى الريع.","خطأ","صح"],
+[TF,"في النظام الرأسمالي تتدخل الدولة بشكل مباشر في التسعير.","خطأ","صح"],
+[TF,"شركة الطيران الوحيدة في الدولة مثال على الاحتكار التام.","صح","خطأ"],
+[TF,"قانون الطلب ينص على علاقة طردية بين السعر والكمية المطلوبة.","خطأ","صح"],
+[TF,"ارتفاع الضرائب على الإنتاج يؤدي إلى انخفاض العرض.","صح","خطأ"],
+[TF,"معامل مرونة الطلب في الطلب عديم المرونة يساوي واحدًا.","خطأ","صح"],
+[TF,"منحنى الطلب في الطلب لانهائي المرونة أفقي.","صح","خطأ"],
+[TF,"زيادة الدخل تزيد الطلب على السلع الرديئة.","خطأ","صح"],
+[TF,"عند سعر أقل من سعر التوازن يحدث نقص في السوق.","صح","خطأ"],
+[TF,"إذا كان معامل المرونة أقل من 1 فالطلب غير مرن.","صح","خطأ"],
+[TF,"منحنى العرض سالب الميل.","خطأ","صح"],
+[TF,"كل القرارات الاقتصادية هي قرارات حدية يستعمل فيها التحليل الحدي.","صح","خطأ"],
+[TF,"التغير في الطلب ينتج عن تغير سعر السلعة نفسها.","خطأ","صح"],
+[T,"من المكونات الأساسية لقطاع السياحة:","قطاع الجذب السياحي","قطاع الزراعة","قطاع التعدين","لا شيء مما سبق"],
+[T,"المشكلة الاقتصادية الأساسية هي:","الندرة وتعدد الحاجات","التضخم","البطالة","الاحتكار"],
+[T,"أي من التالي ليس من النظم الاقتصادية؟","التعاوني","الرأسمالي","الاشتراكي","المختلط"],
+[T,"الاقتصاد الذي يدرس ما يجب أن يكون عليه الاقتصاد ويخضع للآراء الشخصية:","المعياري","الموضوعي","الكلي","الجزئي"],
+[T,"المتغيرات في النموذج الاقتصادي نوعان:","مستقلة وتابعة","ثابتة ومتحركة","كمية ونوعية","حدية وكلية"],
+[T,"فنادق الخمس نجوم تُصنف ضمن:","احتكار القلة","المنافسة الكاملة","الاحتكار التام","المنافسة الاحتكارية"],
+[T,"سيارات الأجرة والمقاهي الصغيرة مثال على:","المنافسة الكاملة","الاحتكار التام","احتكار القلة","المنافسة الاحتكارية"],
+[T,"من محددات الطلب:","أذواق المستهلكين","عدد المنتجين","تكاليف الإنتاج","المستوى التقني"],
+[T,"ارتفاع سعر سلعة بديلة يؤدي إلى:","زيادة الطلب على السلعة","انخفاض الطلب على السلعة","ثبات الطلب","انخفاض العرض"],
+[T,"السلع التي ينخفض الطلب عليها بزيادة الدخل تسمى:","سلع رديئة","سلع جيدة","سلع مكملة","سلع بديلة"],
+[T,"التغير في الكمية المطلوبة يحدث بسبب تغير:","السعر","الدخل","الأذواق","عدد المستهلكين"],
+[T,"انتقال منحنى الطلب إلى اليمين يعني:","زيادة الطلب","نقص الطلب","زيادة الكمية المطلوبة","نقص الكمية المطلوبة"],
+[T,"من محددات العرض:","البنية التحتية","أذواق المستهلكين","وقت الفراغ","المسافة عن المقصد"],
+[T,"عند سعر أعلى من سعر التوازن تكون حالة السوق:","فائض","نقص","توازن","لا يمكن تحديدها"],
+[T,"زيادة الطلب مع ثبات العرض تؤدي إلى:","ارتفاع السعر والكمية","انخفاض السعر والكمية","ارتفاع السعر وانخفاض الكمية","ثبات السعر"],
+[T,"تحديد سقف سعري يعني أن الحد الأعلى للسعر يُحدد:","بقرار الدولة","بقرار المستهلكين","بقرار المنتج فقط","تلقائيًا"],
+[T,"إذا كان معامل المرونة أقل من 1 فالطلب:","غير مرن","مرن","متكافئ المرونة","لانهائي المرونة"],
+[T,"إذا كان معامل المرونة أكبر من 1 فمنحنى الطلب:","بطيء الانحدار","عمودي","أفقي","شديد الانحدار"],
+[T,"منحنى إمكانيات الإنتاج ميله:","سالب","موجب","صفر","لانهائي"],
+[T,"من افتراضات منحنى إمكانيات الإنتاج:","توظيف كل عناصر الإنتاج بالكامل","تغير مستوى التقنية","إنتاج ثلاث سلع","تغير كمية الموارد"],
+[T,"عائد عنصر العمل يسمى:","الأجر","الفائدة","الريع","الربح"],
+[T,"عائد المنظم يسمى:","الربح","الأجر","الريع","الفائدة"],
+[T,"أي من التالي ليس من عناصر الموارد السياحية الأساسية؟","الاحتكار","العناصر الطبيعية","المرافق والتجهيزات","التنظيم السياحي"],
+[T,"الطلب الذي معامل مرونته يساوي صفرًا ومنحناه عمودي:","عديم المرونة","غير مرن","متكافئ المرونة","مرن"],
+[T,"الطلب الذي معامل مرونته يساوي واحدًا صحيحًا:","متكافئ المرونة","عديم المرونة","مرن","لانهائي المرونة"],
+[M,"ارتفع سعر الغرفة من 200 إلى 250 ريالًا فانخفضت الكمية من 100 إلى 70 غرفة. معامل المرونة (الطريقة العادية) ونوع الطلب:","‎-1.2 (مرن)","‎-0.8 (غير مرن)","‎-0.3 (غير مرن)","‎-1.0 (متكافئ)"],
+[M,"نقطة الوسط: السعر من 8 إلى 6 والكمية من 40 إلى 60. معامل المرونة:","‎-1.4","‎-0.7","‎-2.0","‎-1.0"],
+[M,"نقطة الوسط: السعر من 5 إلى 10 والكمية من 60 إلى 40. معامل المرونة:","‎-0.6","‎-1.5","‎-0.4","‎-1.0"],
+[M,"ارتفع السعر 10% فانخفضت الكمية المطلوبة 20%. معامل المرونة:","‎-2 (مرن)","‎-0.5 (غير مرن)","‎-1 (متكافئ)","‎-10 (مرن)"],
+[M,"ارتفع السعر من 10 إلى 20 ريالًا وبقيت الكمية 30 وحدة. نوع الطلب:","عديم المرونة (صفر)","غير مرن (0.6)","متكافئ المرونة (1)","لانهائي المرونة"],
+[M,"طلب 3 مستهلكين عند السعر 20 هو: A=30 و B=20 و C=10. طلب السوق:","60","30","20","90"],
+[M,"نفس المستهلكين عند السعر 20 (A=30, B=20, C=10). متوسط طلب السوق:","20","60","30","10"],
+[M,"100 منتج متطابقون، كل منهم يعرض 8 وحدات عند السعر 20. عرض السوق:","800","8","500","1300"],
+[M,"سوق الغرف: عند السعر 10 المطلوب 100 والمعروض 20، وعند 30 المطلوب 60 والمعروض 60، وعند 50 المطلوب 20 والمعروض 100. سعر التوازن وكميته:","السعر 30 والكمية 60","السعر 10 والكمية 100","السعر 50 والكمية 100","السعر 30 والكمية 20"],
+[M,"في نفس السوق (الطلب 80 والعرض 40 عند السعر 20): حالة السوق عند 20:","نقص 40","فائض 40","نقص 80","فائض 80"],
+[M,"في نفس السوق عند السعر 50 (الطلب 20 والعرض 100): حالة السوق:","فائض 80","نقص 80","فائض 20","نقص 100"],
+[M,"الطلب Qd = 100 − 2P والعرض Qs = 20 + 2P. سعر التوازن وكميته:","P = 20 و Q = 60","P = 40 و Q = 20","P = 20 و Q = 80","P = 30 و Q = 40"],
+[M,"بنفس الدالتين، حددت الدولة سعرًا أدنى (أرضية) 30. حالة السوق:","فائض 40","نقص 40","فائض 20","نقص 80"],
+[M,"إمكانيات الإنتاج: الغرف (0،1،2،3،4) مقابل الطعام (20،18،14،8،0). تكلفة الفرصة للغرفة الرابعة (من D إلى E):","8 طن","6 طن","4 طن","2 طن"],
+[WS,"ارتفع سعر الغرفة من 80 إلى 100 ريال فانخفضت الكمية المطلوبة من 40 إلى 34 غرفة. احسب معامل مرونة الطلب السعرية (الطريقة العادية).",[["المعامل",-0.6]]],
+[WS,"طريقة نقطة الوسط: ارتفع السعر من 5 إلى 7 ريالات وانخفضت الكمية من 50 إلى 30 وحدة. احسب معامل المرونة.",[["المعامل",-1.5]]],
+[WS,"طريقة نقطة الوسط: انخفض السعر من 4 إلى 3 وزادت الكمية من 10 إلى 20 وحدة. احسب معامل المرونة (قرّب لرقمين عشريين).",[["المعامل",-2.33]]],
+[WS,"ارتفع السعر 5% فانخفضت الكمية المطلوبة 15%. احسب معامل مرونة الطلب.",[["المعامل",-3]]],
+[WS,"عند سعر معين يطلب المستهلك A: 50 وحدة، والمستهلك B: 40 وحدة، والمستهلك C: 30 وحدة.",[["طلب السوق",120],["متوسط طلب السوق",40]]],
+[WS,"يوجد في السوق 200 منتج متطابق، يعرض كل منهم 6 وحدات عند سعر معين. احسب عرض السوق.",[["عرض السوق",1200]]],
+[WS,"الطلب: Qd = 120 − 3P، والعرض: Qs = 20 + 2P. أوجد سعر وكمية التوازن.",[["سعر التوازن",20],["كمية التوازن",60]]],
+[WS,"بنفس الدالتين (Qd = 120 − 3P و Qs = 20 + 2P): حددت الدولة سقفًا سعريًا قدره 10. أوجد الكمية المطلوبة والمعروضة ومقدار النقص.",[["الكمية المطلوبة",90],["الكمية المعروضة",40],["مقدار النقص",50]]],
+[WS,"بنفس الدالتين: حددت الدولة أرضية سعرية قدرها 30. أوجد الكمية المطلوبة والمعروضة ومقدار الفائض.",[["الكمية المطلوبة",30],["الكمية المعروضة",80],["مقدار الفائض",50]]],
+[WS,"دالة الاستهلاك C = a + bY حيث a = 50 و b = 0.8. احسب الاستهلاك عندما يكون الدخل Y = 200.",[["C",210]]],
+[WS,"دالة الطلب: Qd = 100 − 2P. احسب الكمية المطلوبة عند السعر P = 15.",[["Qd",70]]],
+[WS,"جدول إمكانيات الإنتاج: الغرف (0، 1، 2، 3، 4) مقابل الطعام بالطن (20، 19، 15، 9، 0). احسب تكلفة الفرصة البديلة (بالطن) للغرفة عند الانتقال من C إلى D، ثم من D إلى E.",[["من C إلى D",6],["من D إلى E",9]]],
+[TB,"كمّل جدول طلب السوق (الإجمالي ثم المتوسط):",["السعر","A","B","C","طلب السوق","المتوسط"],[[10,40,30,20,[90],[30]],[20,30,20,10,[60],[20]],[30,20,10,0,[30],[10]]]],
+[TB,"حدد مقدار النقص أو الفائض عند كل سعر (التوازن عند 30):",["السعر","المطلوبة","المعروضة","النقص/الفائض"],[[10,100,20,[80]],[20,80,40,[40]],[30,60,60,[0]],[40,40,80,[40]],[50,20,100,[80]]]],
+[TB,"كمّل جدول مرونة الطلب:",["%ΔP","%ΔQ","المعامل"],[[10,-5,[-0.5]],[20,-20,[-1]],[10,-30,[-3]],[25,[-10],-0.4]]],
+[TB,"كمّل جدول عرض السوق (مجموع المنتجين الثلاثة):",["السعر","منتج 1","منتج 2","منتج 3","عرض السوق"],[[2,5,2,0,[7]],[4,10,6,2,[18]],[6,14,10,6,[30]],[8,18,12,10,[40]],[10,20,15,13,[48]]]],
+[TB,"كمّل تكلفة الفرصة البديلة للغرفة (بالطن من الطعام):",["البديل","غرف","طعام","تكلفة الفرصة"],[["A",0,20,"—"],["B",1,19,[1]],["C",2,15,[4]],["D",3,9,[6]],["E",4,0,[9]]]],
+[T,"توقع المستهلكين ارتفاع الأسعار مستقبلًا يؤدي إلى:","زيادة الطلب الحالي","انخفاض الطلب الحالي","ثبات الطلب","زيادة العرض"],
+[T,"ارتفاع سعر سلعة مكملة يؤدي إلى:","انخفاض الطلب على السلعة الأخرى","زيادة الطلب على السلعة الأخرى","ثبات الطلب","زيادة العرض"],
+[T,"زيادة الإعانات الحكومية للمنتجين تؤدي إلى:","زيادة العرض","انخفاض العرض","زيادة الطلب","انخفاض الطلب"],
+[T,"زيادة الطلب مع انخفاض العرض تؤدي حتمًا إلى:","ارتفاع السعر","انخفاض السعر","ثبات السعر","ارتفاع الكمية"],
+[T,"زيادة العرض مع ثبات الطلب تؤدي إلى:","انخفاض السعر وزيادة الكمية","ارتفاع السعر وانخفاض الكمية","ارتفاع السعر والكمية","انخفاض السعر والكمية"],
+[T,"انخفاض الطلب مع ثبات العرض يؤدي إلى:","انخفاض السعر والكمية","ارتفاع السعر والكمية","انخفاض السعر وزيادة الكمية","ثبات السعر"],
+[T,"سوق فيه بائع واحد وعوائق دخول رئيسية:","الاحتكار التام","المنافسة الكاملة","المنافسة الاحتكارية","احتكار القلة"],
+[T,"من خصائص المنافسة الاحتكارية:","سلع متشابهة لكن غير متجانسة","بائع واحد","سلع متجانسة تمامًا","عوائق دخول مرتفعة"],
+[T,"من خصائص احتكار القلة:","عدد قليل من المؤسسات يسيطر على الصناعة","عدد كبير من البائعين","بائع واحد فقط","سهولة الدخول والخروج"],
+[T,"الشقق المفروشة وفنادق 3 و4 نجوم تُصنف ضمن:","المنافسة الاحتكارية","المنافسة الكاملة","الاحتكار التام","احتكار القلة"],
+[T,"العلاقة بين سعر السلعة والكمية المعروضة منها:","طردية","عكسية","معدومة","ثابتة"],
+[T,"التغير في الكمية المعروضة يحدث بسبب تغير:","سعر السلعة","عدد المنتجين","الضرائب","التقنية"],
+[T,"من الخصائص الاقتصادية للقطاع السياحي:","انخفاض التكاليف الثابتة وارتفاع التشغيلية","ارتفاع التكاليف الثابتة وانخفاض التشغيلية","قابلية المنتج للتخزين","ثبات الطلب طوال العام"],
+[T,"النظام الذي تكون فيه الملكية عامة لعناصر الإنتاج:","الاشتراكي","الرأسمالي","المختلط","الإسلامي"],
+[T,"من سمات النظام الإسلامي:","تحريم الاكتناز والربا","الملكية العامة الكاملة","عدم تدخل الدولة نهائيًا","الحرية المطلقة للإنتاج"],
+[T,"الكفاءة الاقتصادية تعني:","الاستغلال الأمثل للموارد الإنتاجية","ثبات الأسعار","توزيع الدخل بعدالة","زيادة الإنتاج مع الزمن"],
+[T,"النمو الاقتصادي يعني:","زيادة إنتاج السلع والخدمات مع الزمن","ثبات الأسعار","العدالة في التوزيع","الاستغلال الأمثل للموارد"],
+[T,"الاستقرار الاقتصادي يعني:","ثبات الأسعار وعدم تقلبها","زيادة الإنتاج","العدالة في التوزيع","الكفاءة الفنية"],
+[T,"في النموذج Qd = a − bP المتغير التابع هو:","Qd","P","a","b"]
+];
+var $=function(i){return document.getElementById(i)};
+var cur=[],i=0,score=0,wrong=[],last=null,locked=false;
+var MODES=[["كل الأسئلة",null],["صح / خطأ",TF],["اختيارات نظرية",T],["المسائل الحسابية (اختيارات)",M],["مسائل اكتب جوابك بنفسك",WS],["جداول ناقصة كمّلها",TB]];
+$("modes").innerHTML=MODES.map(function(m,k){
+  var n=D.filter(function(d){return !m[1]||d[0]===m[1]}).length;
+  return '<button class="mode" data-k="'+k+'"><span>'+m[0]+'</span><small>'+n+' سؤال</small></button>';
+}).join("");
+$("modes").onclick=function(e){var b=e.target.closest(".mode");if(!b)return;var m=MODES[b.dataset.k];
+  start(D.filter(function(d){return !m[1]||d[0]===m[1]}),true)};
+function shuf(a){a=a.slice();for(var k=a.length-1;k>0;k--){var j=Math.floor(Math.random()*(k+1));var t=a[k];a[k]=a[j];a[j]=t}return a}
+function start(list,mix){last=list;cur=mix?shuf(list):list;i=0;score=0;wrong=[];show("quiz");render()}
+function show(id){["home","quiz","end"].forEach(function(s){$(s).hidden=s!==id});window.scrollTo(0,0)}
+function render(){
+  var d=cur[i];locked=false;
+  $("cnt").textContent="سؤال "+(i+1)+" من "+cur.length;
+  $("sc").textContent="الصحيح: "+score;
+  $("pb").style.width=(i/cur.length*100)+"%";
+  $("tag").textContent=d[0];$("q").textContent=d[1];$("next").hidden=true;
+  if(d[0]===WS){renderW(d);return}
+  if(d[0]===TB){renderT(d);return}
+  var o=d.slice(2);if(d[0]!==TF)o=shuf(o);else o=["صح","خطأ"];
+  $("opts").innerHTML="";
+  o.forEach(function(t){var b=document.createElement("button");b.className="opt";b.textContent=t;
+    b.onclick=function(){pick(b,t,d)};$("opts").appendChild(b)});
+}
+function pick(b,t,d){
+  if(locked)return;locked=true;
+  var ok=t===d[2];
+  if(ok)score++;else wrong.push(d);
+  b.classList.add(ok?"ok":"no");
+  Array.prototype.forEach.call($("opts").children,function(x){x.disabled=true;if(x.textContent===d[2])x.classList.add("ok")});
+  $("sc").textContent="الصحيح: "+score;
+  $("next").hidden=false;$("next").textContent=i===cur.length-1?"عرض النتيجة":"التالي";$("next").focus();
+}
+function num(s){s=String(s).replace(/[٠-٩]/g,function(c){return c.charCodeAt(0)-1632}).replace(/[٫,]/g,".").replace(/[−–—]/g,"-").replace(/[^0-9.\-]/g,"");return parseFloat(s)}
+function renderT(d){
+  var a=[],h='<div class="tw"><table><tr>'+d[2].map(function(x){return '<th>'+x+'</th>'}).join('')+'</tr>';
+  d[3].forEach(function(r){h+='<tr>'+r.map(function(c){if(Array.isArray(c)){a.push(c[0]);return '<td><input inputmode="decimal" autocomplete="off" dir="ltr"></td>'}return '<td><span class="ltr">'+c+'</span></td>'}).join('')+'</tr>'});
+  $("opts").innerHTML=h+'</table></div><p class="hint">املأ الخانات الفاضية. الإشارة السالبة اختيارية.</p><button class="go" id="chk">تحقق من الجدول</button>';
+  var ins=$("opts").querySelectorAll("input");ins[0].focus();
+  $("chk").onclick=function(){checkT(d,ins,a)};
+}
+function checkT(d,ins,a){
+  if(locked)return;locked=true;var all=true;
+  ins.forEach(function(x,k){var v=num(x.value),ok=!isNaN(v)&&Math.abs(Math.abs(v)-Math.abs(a[k]))<=0.05;
+    x.classList.add(ok?"ok":"no");x.disabled=true;
+    if(!ok){all=false;x.parentNode.insertAdjacentHTML("beforeend",'<small class="fix"><span class="ltr">'+a[k]+'</span></small>')}});
+  if(all)score++;else wrong.push(d);
+  $("chk").hidden=true;$("sc").textContent="الصحيح: "+score;
+  $("next").hidden=false;$("next").textContent=i===cur.length-1?"عرض النتيجة":"التالي";$("next").focus();
+}
+function renderW(d){
+  var h="";d[2].forEach(function(f,k){h+='<label class="fld"><span>'+f[0]+'</span><input inputmode="decimal" autocomplete="off" dir="ltr"></label>'});
+  $("opts").innerHTML=h+'<p class="hint">اكتب رقمًا فقط. الإشارة السالبة اختيارية.</p><button class="go" id="chk">تحقق من الجواب</button>';
+  var ins=$("opts").querySelectorAll("input");ins[0].focus();
+  $("chk").onclick=function(){checkW(d,ins)};
+  ins.forEach(function(x){x.onkeydown=function(e){if(e.key==="Enter")checkW(d,ins)}});
+}
+function checkW(d,ins){
+  if(locked)return;locked=true;var all=true;
+  ins.forEach(function(x,k){var f=d[2][k],v=num(x.value);
+    var ok=!isNaN(v)&&Math.abs(Math.abs(v)-Math.abs(f[1]))<=0.05;
+    x.classList.add(ok?"ok":"no");x.disabled=true;
+    if(!ok){all=false;var s=document.createElement("small");s.className="fix";s.innerHTML='الصحيح: <span class="ltr">'+f[1]+'</span>';x.parentNode.appendChild(s)}});
+  if(all)score++;else wrong.push(d);
+  $("chk").hidden=true;$("sc").textContent="الصحيح: "+score;
+  $("next").hidden=false;$("next").textContent=i===cur.length-1?"عرض النتيجة":"التالي";$("next").focus();
+}
+$("next").onclick=function(){i++;if(i>=cur.length)finish();else render()};
+function finish(){
+  $("pb").style.width="100%";show("end");
+  var p=Math.round(score/cur.length*100);
+  $("res").textContent=score+" / "+cur.length;
+  $("msg").textContent=p>=90?"ممتاز، أنت جاهز.":p>=70?"مستواك جيد، راجع الأخطاء وأعد المحاولة.":"أعد المحاولة بعد مراجعة الملف.";
+  $("wrongBtn").hidden=!wrong.length;
+  var by={};cur.forEach(function(d){by[d[0]]=by[d[0]]||[0,0];by[d[0]][1]++});wrong.forEach(function(d){by[d[0]][0]++});
+  $("brk").innerHTML=Object.keys(by).map(function(k){return k+": "+(by[k][1]-by[k][0])+" / "+by[k][1]}).join("<br>");
+}
+$("again").onclick=function(){start(last,true)};
+$("wrongBtn").onclick=function(){start(wrong.slice(),true)};
+$("home2").onclick=function(){show("home")};
+</script>
+</body>
+</html>
