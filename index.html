@@ -20,6 +20,14 @@ button{font:inherit;cursor:pointer;color:var(--ink)}
 .mode:hover,.mode:focus-visible{border-color:var(--acc);outline:none}
 .bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin:6px 0 14px}
 .bar i{display:block;height:100%;background:var(--acc);width:0;transition:width .25s}
+.question-nav{margin:10px 0 14px;padding:10px;background:var(--card);border:1px solid var(--line);border-radius:12px}
+.question-nav-head{display:flex;justify-content:space-between;align-items:center;color:var(--mut);font-size:14px;margin-bottom:7px}
+.question-nav-grid{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:5px;max-height:100px;overflow-y:auto}
+.question-nav button{min-height:32px;padding:2px;border:1px solid var(--line);border-radius:7px;background:var(--bg);font-size:14px}
+.question-nav button:hover,.question-nav button:focus-visible{border-color:var(--acc);outline:2px solid var(--acc);outline-offset:1px}
+.question-nav button[aria-current="step"]{border:2px solid var(--acc);font-weight:700}
+.question-nav button.answered-correct{background:var(--okbg);border-color:var(--ok);color:var(--ok)}
+.question-nav button.answered-wrong{background:var(--nobg);border-color:var(--no);color:var(--no)}
 .top{display:flex;justify-content:space-between;color:var(--mut);font-size:15px}
 .q{font-size:20px;font-weight:600;margin:10px 0 16px;line-height:1.8}
 .tag{display:inline-block;font-size:13px;color:var(--acc);border:1px solid var(--acc);border-radius:20px;padding:0 10px}
@@ -64,6 +72,10 @@ button{font:inherit;cursor:pointer;color:var(--ink)}
 <section id="quiz" hidden>
   <div class="top"><span id="cnt"></span><span id="sc"></span></div>
   <div class="bar"><i id="pb"></i></div>
+  <nav class="question-nav" aria-label="فهرس الأسئلة">
+    <div class="question-nav-head"><span>انتقل إلى سؤال (الأخضر صحيح، الأحمر خطأ)</span><span id="navCount"></span></div>
+    <div class="question-nav-grid" id="questionNav"></div>
+  </nav>
   <span class="tag" id="tag"></span>
   <div class="q" id="q"></div>
   <div id="opts"></div>
@@ -179,7 +191,7 @@ var D=[
 [T,"في النموذج Qd = a − bP المتغير التابع هو:","Qd","P","a","b"]
 ];
 var $=function(i){return document.getElementById(i)};
-var cur=[],i=0,score=0,wrong=[],last=null,locked=false;
+var cur=[],i=0,score=0,wrong=[],last=null,locked=false,answers=[],drafts=[];
 var MODES=[["كل الأسئلة",null],["صح / خطأ",TF],["اختيارات نظرية",T],["المسائل الحسابية (اختيارات)",M],["مسائل اكتب جوابك بنفسك",WS],["جداول ناقصة كمّلها",TB]];
 $("modes").innerHTML=MODES.map(function(m,k){
   var n=D.filter(function(d){return !m[1]||d[0]===m[1]}).length;
@@ -188,73 +200,124 @@ $("modes").innerHTML=MODES.map(function(m,k){
 $("modes").onclick=function(e){var b=e.target.closest(".mode");if(!b)return;var m=MODES[b.dataset.k];
   start(D.filter(function(d){return !m[1]||d[0]===m[1]}),true)};
 function shuf(a){a=a.slice();for(var k=a.length-1;k>0;k--){var j=Math.floor(Math.random()*(k+1));var t=a[k];a[k]=a[j];a[j]=t}return a}
-function start(list,mix){last=list;cur=mix?shuf(list):list;i=0;score=0;wrong=[];show("quiz");render()}
+function start(list,mix){last=list;cur=mix?shuf(list):list;i=0;score=0;wrong=[];answers=cur.map(function(){return null});drafts=cur.map(function(){return null});show("quiz");render()}
 function show(id){["home","quiz","end"].forEach(function(s){$(s).hidden=s!==id});window.scrollTo(0,0)}
+function updateNavigator(){
+  var nav=$("questionNav");
+  if(nav.children.length!==cur.length){
+    nav.innerHTML="";
+    cur.forEach(function(d,k){var b=document.createElement("button");b.type="button";b.textContent=k+1;nav.appendChild(b)});
+  }
+  var answered=0;
+  Array.prototype.forEach.call(nav.children,function(b,k){
+    var a=answers[k];
+    b.className=a?(a.correct?"answered-correct":"answered-wrong"):"";
+    if(k===i)b.setAttribute("aria-current","step");else b.removeAttribute("aria-current");
+    b.setAttribute("aria-label","سؤال "+(k+1)+(a?(a.correct?"، تمت الإجابة بشكل صحيح":"، تمت الإجابة بشكل خاطئ"):"، لم تتم الإجابة"));
+    if(a)answered++;
+  });
+  $("navCount").textContent="المجاب: "+answered+" / "+cur.length;
+  return answered;
+}
+function saveDraft(){
+  if(answers[i])return;
+  var ins=$("opts").querySelectorAll("input");
+  if(ins.length)drafts[i]=Array.prototype.map.call(ins,function(x){return x.value});
+}
+function saveAnswer(correct,values){answers[i]={correct:correct,values:values};drafts[i]=null}
 function render(){
   var d=cur[i];locked=false;
   $("cnt").textContent="سؤال "+(i+1)+" من "+cur.length;
-  $("sc").textContent="الصحيح: "+score;
-  $("pb").style.width=(i/cur.length*100)+"%";
-  $("tag").textContent=d[0];$("q").textContent=d[1];$("next").hidden=true;
+  score=answers.reduce(function(n,a){return n+(a&&a.correct?1:0)},0);
+  var answered=updateNavigator();
+  $("sc").textContent="الصحيح: "+score+" · المجاب: "+answered;
+  $("pb").style.width=(answered/cur.length*100)+"%";
+  $("tag").textContent=d[0];$("q").textContent=d[1];$("next").hidden=false;
+  $("next").textContent=i===cur.length-1?"عرض النتيجة":"التالي";
+  locked=!!answers[i];
   if(d[0]===WS){renderW(d);return}
   if(d[0]===TB){renderT(d);return}
   var o=d.slice(2);if(d[0]!==TF)o=shuf(o);else o=["صح","خطأ"];
   $("opts").innerHTML="";
   o.forEach(function(t){var b=document.createElement("button");b.className="opt";b.textContent=t;
-    b.onclick=function(){pick(b,t,d)};$("opts").appendChild(b)});
+    if(answers[i]){
+      b.disabled=true;
+      if(t===d[2])b.classList.add("ok");
+      if(t===answers[i].values[0]&&t!==d[2])b.classList.add("no");
+    }else b.onclick=function(){pick(b,t,d)};
+    $("opts").appendChild(b)});
 }
 function pick(b,t,d){
   if(locked)return;locked=true;
   var ok=t===d[2];
-  if(ok)score++;else wrong.push(d);
-  b.classList.add(ok?"ok":"no");
-  Array.prototype.forEach.call($("opts").children,function(x){x.disabled=true;if(x.textContent===d[2])x.classList.add("ok")});
-  $("sc").textContent="الصحيح: "+score;
-  $("next").hidden=false;$("next").textContent=i===cur.length-1?"عرض النتيجة":"التالي";$("next").focus();
+  saveAnswer(ok,[t]);render();$("next").focus();
 }
 function num(s){s=String(s).replace(/[٠-٩]/g,function(c){return c.charCodeAt(0)-1632}).replace(/[٫,]/g,".").replace(/[−–—]/g,"-").replace(/[^0-9.\-]/g,"");return parseFloat(s)}
 function renderT(d){
+  var answer=answers[i],values=answer?answer.values:(drafts[i]||[]);
   var a=[],h='<div class="tw"><table><tr>'+d[2].map(function(x){return '<th>'+x+'</th>'}).join('')+'</tr>';
   d[3].forEach(function(r){h+='<tr>'+r.map(function(c){if(Array.isArray(c)){a.push(c[0]);return '<td><input inputmode="decimal" autocomplete="off" dir="ltr"></td>'}return '<td><span class="ltr">'+c+'</span></td>'}).join('')+'</tr>'});
   $("opts").innerHTML=h+'</table></div><p class="hint">املأ الخانات الفاضية. الإشارة السالبة اختيارية.</p><button class="go" id="chk">تحقق من الجدول</button>';
-  var ins=$("opts").querySelectorAll("input");ins[0].focus();
+  var ins=$("opts").querySelectorAll("input");
+  ins.forEach(function(x,k){
+    x.value=values[k]||"";
+    if(answer){
+      var v=num(x.value),ok=!isNaN(v)&&Math.abs(Math.abs(v)-Math.abs(a[k]))<=0.05;
+      x.classList.add(ok?"ok":"no");x.disabled=true;
+      if(!ok)x.parentNode.insertAdjacentHTML("beforeend",'<small class="fix"><span class="ltr">'+a[k]+'</span></small>');
+    }
+  });
+  $("chk").hidden=!!answer;
+  if(!answer)ins[0].focus();
   $("chk").onclick=function(){checkT(d,ins,a)};
 }
 function checkT(d,ins,a){
   if(locked)return;locked=true;var all=true;
-  ins.forEach(function(x,k){var v=num(x.value),ok=!isNaN(v)&&Math.abs(Math.abs(v)-Math.abs(a[k]))<=0.05;
-    x.classList.add(ok?"ok":"no");x.disabled=true;
-    if(!ok){all=false;x.parentNode.insertAdjacentHTML("beforeend",'<small class="fix"><span class="ltr">'+a[k]+'</span></small>')}});
-  if(all)score++;else wrong.push(d);
-  $("chk").hidden=true;$("sc").textContent="الصحيح: "+score;
-  $("next").hidden=false;$("next").textContent=i===cur.length-1?"عرض النتيجة":"التالي";$("next").focus();
+  var values=Array.prototype.map.call(ins,function(x){return x.value});
+  ins.forEach(function(x,k){var v=num(x.value),ok=!isNaN(v)&&Math.abs(Math.abs(v)-Math.abs(a[k]))<=0.05;if(!ok)all=false});
+  saveAnswer(all,values);render();$("next").focus();
 }
 function renderW(d){
+  var answer=answers[i],values=answer?answer.values:(drafts[i]||[]);
   var h="";d[2].forEach(function(f,k){h+='<label class="fld"><span>'+f[0]+'</span><input inputmode="decimal" autocomplete="off" dir="ltr"></label>'});
   $("opts").innerHTML=h+'<p class="hint">اكتب رقمًا فقط. الإشارة السالبة اختيارية.</p><button class="go" id="chk">تحقق من الجواب</button>';
-  var ins=$("opts").querySelectorAll("input");ins[0].focus();
+  var ins=$("opts").querySelectorAll("input");
+  ins.forEach(function(x,k){
+    x.value=values[k]||"";
+    if(answer){
+      var f=d[2][k],v=num(x.value),ok=!isNaN(v)&&Math.abs(Math.abs(v)-Math.abs(f[1]))<=0.05;
+      x.classList.add(ok?"ok":"no");x.disabled=true;
+      if(!ok){var s=document.createElement("small");s.className="fix";s.innerHTML='الصحيح: <span class="ltr">'+f[1]+'</span>';x.parentNode.appendChild(s)}
+    }
+  });
+  $("chk").hidden=!!answer;
+  if(!answer)ins[0].focus();
   $("chk").onclick=function(){checkW(d,ins)};
   ins.forEach(function(x){x.onkeydown=function(e){if(e.key==="Enter")checkW(d,ins)}});
 }
 function checkW(d,ins){
   if(locked)return;locked=true;var all=true;
-  ins.forEach(function(x,k){var f=d[2][k],v=num(x.value);
-    var ok=!isNaN(v)&&Math.abs(Math.abs(v)-Math.abs(f[1]))<=0.05;
-    x.classList.add(ok?"ok":"no");x.disabled=true;
-    if(!ok){all=false;var s=document.createElement("small");s.className="fix";s.innerHTML='الصحيح: <span class="ltr">'+f[1]+'</span>';x.parentNode.appendChild(s)}});
-  if(all)score++;else wrong.push(d);
-  $("chk").hidden=true;$("sc").textContent="الصحيح: "+score;
-  $("next").hidden=false;$("next").textContent=i===cur.length-1?"عرض النتيجة":"التالي";$("next").focus();
+  var values=Array.prototype.map.call(ins,function(x){return x.value});
+  ins.forEach(function(x,k){var f=d[2][k],v=num(x.value);if(isNaN(v)||Math.abs(Math.abs(v)-Math.abs(f[1]))>0.05)all=false});
+  saveAnswer(all,values);render();$("next").focus();
 }
-$("next").onclick=function(){i++;if(i>=cur.length)finish();else render()};
+$("questionNav").onclick=function(e){
+  var b=e.target.closest("button"),target=b?Array.prototype.indexOf.call($("questionNav").children,b):-1;
+  if(target<0||target===i)return;
+  saveDraft();i=target;render();
+};
+$("next").onclick=function(){if(i===cur.length-1){saveDraft();finish()}else{saveDraft();i++;render()}};
 function finish(){
+  score=answers.reduce(function(n,a){return n+(a&&a.correct?1:0)},0);
+  wrong=cur.filter(function(d,k){return !answers[k]||!answers[k].correct});
   $("pb").style.width="100%";show("end");
   var p=Math.round(score/cur.length*100);
   $("res").textContent=score+" / "+cur.length;
-  $("msg").textContent=p>=90?"ممتاز، أنت جاهز.":p>=70?"مستواك جيد، راجع الأخطاء وأعد المحاولة.":"أعد المحاولة بعد مراجعة الملف.";
+  var skipped=answers.filter(function(a){return !a}).length;
+  $("msg").textContent=(p>=90?"ممتاز، أنت جاهز.":p>=70?"مستواك جيد، راجع الأخطاء وأعد المحاولة.":"أعد المحاولة بعد مراجعة الملف.")+(skipped?" بقي "+skipped+" سؤال بدون إجابة.":"");
   $("wrongBtn").hidden=!wrong.length;
-  var by={};cur.forEach(function(d){by[d[0]]=by[d[0]]||[0,0];by[d[0]][1]++});wrong.forEach(function(d){by[d[0]][0]++});
-  $("brk").innerHTML=Object.keys(by).map(function(k){return k+": "+(by[k][1]-by[k][0])+" / "+by[k][1]}).join("<br>");
+  var by={};cur.forEach(function(d,k){by[d[0]]=by[d[0]]||[0,0,0];by[d[0]][1]++;if(!answers[k]){by[d[0]][0]++;by[d[0]][2]++}else if(!answers[k].correct)by[d[0]][0]++});
+  $("brk").innerHTML=Object.keys(by).map(function(k){return k+": "+(by[k][1]-by[k][0])+" / "+by[k][1]+(by[k][2]?" (غير مجاب: "+by[k][2]+")":"")}).join("<br>");
 }
 $("again").onclick=function(){start(last,true)};
 $("wrongBtn").onclick=function(){start(wrong.slice(),true)};
